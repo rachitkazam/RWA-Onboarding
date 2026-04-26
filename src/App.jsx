@@ -3,7 +3,7 @@ import Papa from "papaparse";
 
 // ═══════════════════════════════════════════════════════════
 // Replace with your deployed Apps Script URL
-const API_URL = "YOUR_APPS_SCRIPT_DEPLOYMENT_URL_HERE";
+const API_URL = "https://script.google.com/a/macros/kazam.in/s/AKfycbx9e0u1LXqJxDTxxwTwNNEkFpXo-PIxkBsSmKYC6KAkOOLXN_-3h8FpU21hwXsRwNuS3w/exec";
 
 // ═══════════════════════════════════════════════════════════
 // DESIGN TOKENS
