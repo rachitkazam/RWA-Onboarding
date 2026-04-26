@@ -22,79 +22,51 @@ const STATES = ["Karnataka", "Delhi", "Haryana", "Maharashtra", "Telangana", "Ut
 const DUTY_OPTIONS = ["Inclusive", "Exclusive"];
 
 // ═══════════════════════════════════════════════════════════
-// API HELPERS
+// DATA LAYER — Read from CSV, Write to Apps Script
 // ═══════════════════════════════════════════════════════════
-async function apiGet(action, params = "") {
-  try {
-    const url = API_URL + "?action=" + action + (params ? "&" + params : "");
-    const res = await fetch(url, { redirect: "follow" });
-    const text = await res.text();
-    return JSON.parse(text);
-  } catch (e) {
-    // Apps Script CORS workaround: use a CORS proxy or JSONP approach
-    // If direct fetch fails, try via Google's redirect-friendly method
-    try {
-      const url = API_URL + "?action=" + action + (params ? "&" + params : "");
-      const res = await fetch(url, { mode: "no-cors" });
-      // Can't read no-cors response, so fall back to published CSV
-      return await fallbackFromCSV(action, params);
-    } catch (e2) {
-      return await fallbackFromCSV(action, params);
-    }
-  }
-}
-
-// Fallback: read directly from published Google Sheets CSV
 const MASTER_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS8DOTWVjesipRMah7trHQ2DTYjVUAW1wHBAAh5wvZMbHcQvROjpPKhZ7fmPkXxEDPP1QTgSZA0fBvj/pub?gid=179090357&single=true&output=csv";
 
-async function fallbackFromCSV(action, params) {
-  if (action === "getSocieties") {
-    const res = await fetch(MASTER_CSV);
-    const text = await res.text();
-    return new Promise((resolve) => {
-      Papa.parse(text, {
-        header: true, skipEmptyLines: true,
-        transformHeader: (h) => h.trim().replace(/^\uFEFF/, ''),
-        complete: (r) => {
-          const societies = r.data.map(row => ({
-            id: (row.society_id || "").trim(),
-            name: (row.society_name || "").trim(),
-            city: (row.city || "").trim(),
-            status: (row.status || "Active").trim(),
-          })).filter(s => s.id && s.name);
-          resolve({ success: true, societies });
-        }
-      });
+function parseCSV(text) {
+  return new Promise((resolve) => {
+    Papa.parse(text, {
+      header: true,
+      skipEmptyLines: true,
+      transformHeader: (h) => h.trim().replace(/^\uFEFF/, ''),
+      complete: (r) => resolve(r.data),
     });
-  }
-  if (action === "getSociety") {
-    const id = params.replace("id=", "");
-    const res = await fetch(MASTER_CSV);
-    const text = await res.text();
-    return new Promise((resolve) => {
-      Papa.parse(text, {
-        header: true, skipEmptyLines: true,
-        transformHeader: (h) => h.trim().replace(/^\uFEFF/, ''),
-        complete: (r) => {
-          const society = r.data.find(row => (row.society_id || "").trim() === id) || null;
-          resolve({ success: true, society });
-        }
-      });
-    });
-  }
-  if (action === "getCPOs") {
-    return { success: true, cpos: ["Vida", "Kazam"] };
-  }
-  return { success: false };
+  });
+}
+
+async function loadSocieties() {
+  const res = await fetch(MASTER_CSV);
+  const text = await res.text();
+  const rows = await parseCSV(text);
+  return rows
+    .filter(r => r.society_id && r.society_name)
+    .map(r => ({
+      id: (r.society_id || "").trim(),
+      name: (r.society_name || "").trim(),
+      city: (r.city || "").trim(),
+      status: (r.status || "Active").trim(),
+    }));
+}
+
+async function loadSocietyById(societyId) {
+  const res = await fetch(MASTER_CSV);
+  const text = await res.text();
+  const rows = await parseCSV(text);
+  return rows.find(r => (r.society_id || "").trim() === societyId) || null;
 }
 
 async function apiPost(data) {
-  // Apps Script with no-cors: we POST then verify via GET
-  await fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify(data),
-  }).catch(() => {});
-  // Give Apps Script time to process
+  try {
+    await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  } catch (e) {
+    // Expected — no-cors can't read response, but POST still goes through
+  }
   await new Promise(r => setTimeout(r, 2500));
   return { success: true };
 }
@@ -589,16 +561,17 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [editLoading, setEditLoading] = useState(false);
 
-  // Load societies and CPOs on mount
+  // Load societies on mount — directly from published CSV
   useEffect(() => {
-    Promise.all([
-      apiGet("getSocieties").catch(() => ({ societies: [] })),
-      apiGet("getCPOs").catch(() => ({ cpos: ["Vida", "Kazam"] })),
-    ]).then(([sRes, cRes]) => {
-      if (sRes.societies) setSocieties(sRes.societies);
-      if (cRes.cpos) setCpos(cRes.cpos);
-      setLoading(false);
-    });
+    loadSocieties()
+      .then(socs => {
+        setSocieties(socs);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to load societies:", err);
+        setLoading(false);
+      });
   }, []);
 
   const set = (key, val) => {
@@ -620,11 +593,9 @@ export default function App() {
   const handleEdit = async (societyId) => {
     setEditLoading(true);
     try {
-      const res = await apiGet("getSociety", "id=" + encodeURIComponent(societyId));
-      if (res.society) {
-        const s = res.society;
+      const s = await loadSocietyById(societyId);
+      if (s) {
         const mapped = { ...emptyForm };
-        // Map all fields from society data
         Object.keys(mapped).forEach(k => {
           if (s[k] !== undefined && s[k] !== null) {
             const val = String(s[k]);
@@ -633,7 +604,6 @@ export default function App() {
         });
         mapped.society_id = societyId;
         mapped.rwa_emails = s.rwa_email || "";
-        // Don't carry over file objects (those are Drive links)
         mapped.agreement_file = null;
         mapped.electricity_bill_file = null;
         mapped.agreement_link = s.agreement_link || "";
@@ -641,9 +611,11 @@ export default function App() {
         setForm(mapped);
         setMode("edit");
         setStep(0);
+      } else {
+        alert("Society not found. Try again.");
       }
     } catch (e) {
-      alert("Failed to load society. Try again.");
+      alert("Failed to load society data.");
     }
     setEditLoading(false);
   };
@@ -678,7 +650,7 @@ export default function App() {
   const reset = () => {
     setResult(null); setForm({ ...emptyForm }); setStep(0); setMode(null);
     // Refresh society list
-    apiGet("getSocieties").then(r => { if (r.societies) setSocieties(r.societies); });
+    loadSocieties().then(socs => setSocieties(socs)).catch(() => {});
   };
 
   // ---- RESULT SCREEN ----
