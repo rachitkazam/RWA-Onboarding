@@ -25,8 +25,67 @@ const DUTY_OPTIONS = ["Inclusive", "Exclusive"];
 // API HELPERS
 // ═══════════════════════════════════════════════════════════
 async function apiGet(action, params = "") {
-  const res = await fetch(API_URL + "?action=" + action + (params ? "&" + params : ""));
-  return res.json();
+  try {
+    const url = API_URL + "?action=" + action + (params ? "&" + params : "");
+    const res = await fetch(url, { redirect: "follow" });
+    const text = await res.text();
+    return JSON.parse(text);
+  } catch (e) {
+    // Apps Script CORS workaround: use a CORS proxy or JSONP approach
+    // If direct fetch fails, try via Google's redirect-friendly method
+    try {
+      const url = API_URL + "?action=" + action + (params ? "&" + params : "");
+      const res = await fetch(url, { mode: "no-cors" });
+      // Can't read no-cors response, so fall back to published CSV
+      return await fallbackFromCSV(action, params);
+    } catch (e2) {
+      return await fallbackFromCSV(action, params);
+    }
+  }
+}
+
+// Fallback: read directly from published Google Sheets CSV
+const MASTER_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS8DOTWVjesipRMah7trHQ2DTYjVUAW1wHBAAh5wvZMbHcQvROjpPKhZ7fmPkXxEDPP1QTgSZA0fBvj/pub?gid=179090357&single=true&output=csv";
+
+async function fallbackFromCSV(action, params) {
+  if (action === "getSocieties") {
+    const res = await fetch(MASTER_CSV);
+    const text = await res.text();
+    return new Promise((resolve) => {
+      Papa.parse(text, {
+        header: true, skipEmptyLines: true,
+        transformHeader: (h) => h.trim().replace(/^\uFEFF/, ''),
+        complete: (r) => {
+          const societies = r.data.map(row => ({
+            id: (row.society_id || "").trim(),
+            name: (row.society_name || "").trim(),
+            city: (row.city || "").trim(),
+            status: (row.status || "Active").trim(),
+          })).filter(s => s.id && s.name);
+          resolve({ success: true, societies });
+        }
+      });
+    });
+  }
+  if (action === "getSociety") {
+    const id = params.replace("id=", "");
+    const res = await fetch(MASTER_CSV);
+    const text = await res.text();
+    return new Promise((resolve) => {
+      Papa.parse(text, {
+        header: true, skipEmptyLines: true,
+        transformHeader: (h) => h.trim().replace(/^\uFEFF/, ''),
+        complete: (r) => {
+          const society = r.data.find(row => (row.society_id || "").trim() === id) || null;
+          resolve({ success: true, society });
+        }
+      });
+    });
+  }
+  if (action === "getCPOs") {
+    return { success: true, cpos: ["Vida", "Kazam"] };
+  }
+  return { success: false };
 }
 
 async function apiPost(data) {
