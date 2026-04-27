@@ -33,9 +33,15 @@ async function loadSocietyById(societyId) {
 
 async function apiPost(data) {
   try {
-    await fetch(API_URL, { method: "POST", body: JSON.stringify(data) });
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(data),
+      redirect: "follow",
+    });
   } catch (e) {}
-  await new Promise(r => setTimeout(r, 2500));
+  await new Promise(r => setTimeout(r, 3500));
   return { success: true };
 }
 
