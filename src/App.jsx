@@ -549,7 +549,12 @@ function OnboardingApp({ user }) {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const [societies, setSocieties] = useState([]);
-  const [cpos, setCpos] = useState(["Vida", "Kazam"]);
+  const [cpos, setCpos] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem("kazam_cpos");
+      return saved ? JSON.parse(saved) : ["Vida", "Kazam"];
+    } catch { return ["Vida", "Kazam"]; }
+  });
   const [loading, setLoading] = useState(true);
   const [editLoading, setEditLoading] = useState(false);
 
@@ -565,8 +570,12 @@ function OnboardingApp({ user }) {
   };
 
   const handleAddCPO = async (name) => {
-    const res = await apiPost({ action: "addCPO", cpo_name: name });
-    setCpos(prev => [...prev, name]);
+    await apiPost({ action: "addCPO", cpo_name: name });
+    setCpos(prev => {
+      const updated = [...prev, name];
+      sessionStorage.setItem("kazam_cpos", JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const handleNew = () => {
