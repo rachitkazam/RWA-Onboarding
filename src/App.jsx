@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Papa from "papaparse";
 
 // Replace with your deployed Apps Script URL
-const API_URL = "https://script.google.com/a/macros/kazam.in/s/AKfycbx9e0u1LXqJxDTxxwTwNNEkFpXo-PIxkBsSmKYC6KAkOOLXN_-3h8FpU21hwXsRwNuS3w/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbx9e0u1LXqJxDTxxwTwNNEkFpXo-PIxkBsSmKYC6KAkOOLXN_-3h8FpU21hwXsRwNuS3w/exec";
 
 // Google OAuth — restricted to @kazam.in
 const GOOGLE_CLIENT_ID = "450055929584-1kdid7qospqa3u2f7ceg3nv9sh1udeoa.apps.googleusercontent.com";
