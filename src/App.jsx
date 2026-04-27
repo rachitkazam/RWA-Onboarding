@@ -32,31 +32,19 @@ async function loadSocietyById(societyId) {
 }
 
 async function apiPost(data) {
-  return new Promise((resolve) => {
-    const iframe = document.createElement("iframe");
-    iframe.name = "kazam_submit_" + Date.now();
-    iframe.style.display = "none";
-    document.body.appendChild(iframe);
+  const params = new URLSearchParams();
+  params.append("data", JSON.stringify(data));
 
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = API_URL;
-    form.target = iframe.name;
+  try {
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: params,
+    });
+  } catch(e) {}
 
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "payload";
-    input.value = JSON.stringify(data);
-    form.appendChild(input);
-
-    document.body.appendChild(form);
-    form.submit();
-
-    setTimeout(() => {
-      try { document.body.removeChild(form); document.body.removeChild(iframe); } catch(e) {}
-      resolve({ success: true });
-    }, 4000);
-  });
+  await new Promise(r => setTimeout(r, 4000));
+  return { success: true };
 }
 
 // ═══════════════════════════════════════════════════════════
