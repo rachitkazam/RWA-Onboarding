@@ -2,7 +2,11 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Papa from "papaparse";
 
 // Replace with your deployed Apps Script URL
-const API_URL = "YOUR_APPS_SCRIPT_DEPLOYMENT_URL_HERE";
+const API_URL = "https://script.google.com/a/macros/kazam.in/s/AKfycbx9e0u1LXqJxDTxxwTwNNEkFpXo-PIxkBsSmKYC6KAkOOLXN_-3h8FpU21hwXsRwNuS3w/exec";
+
+// Google OAuth — restricted to @kazam.in
+const GOOGLE_CLIENT_ID = "450055929584-1kdid7qospqa3u2f7ceg3nv9sh1udeoa.apps.googleusercontent.com";
+const ALLOWED_DOMAIN = "kazam.in";
 
 // Published CSV URL for loading full society details during edit
 const MASTER_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS8DOTWVjesipRMah7trHQ2DTYjVUAW1wHBAAh5wvZMbHcQvROjpPKhZ7fmPkXxEDPP1QTgSZA0fBvj/pub?gid=179090357&single=true&output=csv";
@@ -529,7 +533,7 @@ const emptyForm = {
   poc_name: "", poc_phone: "", rwa_emails: "",
 };
 
-export default function App() {
+function OnboardingApp({ user }) {
   const [mode, setMode] = useState(null); // null=selector, "new", "edit"
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ ...emptyForm });
@@ -672,9 +676,17 @@ export default function App() {
           {mode === "edit" ? "Edit Society" : mode === "new" ? "New Society" : "Society Onboarding"}
         </span>
       </div>
-      {mode && (
-        <Btn onClick={reset} variant="outline" style={{ padding: "6px 16px", fontSize: 12 }}>← Back</Btn>
-      )}
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        {mode && (
+          <Btn onClick={reset} variant="outline" style={{ padding: "6px 16px", fontSize: 12 }}>← Back</Btn>
+        )}
+        {user && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {user.picture && <img src={user.picture} alt="" style={{ width: 28, height: 28, borderRadius: "50%" }} />}
+            <span style={{ fontSize: 12, color: T.sec, maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 
@@ -736,4 +748,89 @@ export default function App() {
       )}
     </div>
   );
+}
+
+// ═══════════════════════════════════════════════════════════
+// AUTH WRAPPER — Google Sign-In restricted to @kazam.in
+// ═══════════════════════════════════════════════════════════
+function LoginPage({ onLogin, error }) {
+  const btnRef = useRef(null);
+
+  useEffect(() => {
+    // Load Google Identity Services script
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.onload = () => {
+      window.google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: (response) => {
+          // Decode JWT to get email
+          const payload = JSON.parse(atob(response.credential.split(".")[1]));
+          onLogin(payload);
+        },
+        auto_select: false,
+      });
+      window.google.accounts.id.renderButton(btnRef.current, {
+        theme: "outline",
+        size: "large",
+        width: 320,
+        text: "signin_with",
+        shape: "rectangular",
+      });
+    };
+    document.head.appendChild(script);
+    return () => { try { document.head.removeChild(script); } catch(e){} };
+  }, []);
+
+  return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(145deg, #0c1222 0%, #162032 50%, #0f1b2d 100%)", fontFamily: T.font }}>
+      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+      <div style={{ background: "#fff", borderRadius: 16, padding: "48px 40px", width: 420, maxWidth: "92vw", textAlign: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 8 }}>
+          <div style={{ width: 38, height: 38, borderRadius: 10, background: T.accent, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <span style={{ fontSize: 26, fontWeight: 800, color: T.text, letterSpacing: -0.8 }}>Kazam</span>
+        </div>
+        <p style={{ color: T.sec, fontSize: 14, margin: "4px 0 32px" }}>Society Onboarding Portal</p>
+        <div ref={btnRef} style={{ display: "flex", justifyContent: "center", marginBottom: 16 }} />
+        {error && (
+          <div style={{ background: T.redBg, color: T.red, padding: "10px 16px", borderRadius: 8, fontSize: 13, fontWeight: 500, marginTop: 12 }}>
+            {error}
+          </div>
+        )}
+        <p style={{ color: T.ter, fontSize: 12, marginTop: 24 }}>Restricted to @kazam.in accounts</p>
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  const [user, setUser] = useState(() => {
+    // Check for saved session
+    try {
+      const saved = sessionStorage.getItem("kazam_user");
+      return saved ? JSON.parse(saved) : null;
+    } catch { return null; }
+  });
+  const [authError, setAuthError] = useState("");
+
+  const handleLogin = (payload) => {
+    const email = (payload.email || "").toLowerCase();
+    if (!email.endsWith("@" + ALLOWED_DOMAIN)) {
+      setAuthError("Access restricted to @" + ALLOWED_DOMAIN + " accounts. You signed in with " + email);
+      return;
+    }
+    const userData = { email, name: payload.name, picture: payload.picture };
+    sessionStorage.setItem("kazam_user", JSON.stringify(userData));
+    setUser(userData);
+    setAuthError("");
+  };
+
+  if (!user) {
+    return <LoginPage onLogin={handleLogin} error={authError} />;
+  }
+
+  return <OnboardingApp user={user} />;
 }
