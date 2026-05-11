@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Papa from "papaparse";
 
 // Replace with your deployed Apps Script URL
-const API_URL = "https://script.google.com/macros/s/AKfycbx9e0u1LXqJxDTxxwTwNNEkFpXo-PIxkBsSmKYC6KAkOOLXN_-3h8FpU21hwXsRwNuS3w/exec";
+const API_URL = "YOUR_APPS_SCRIPT_DEPLOYMENT_URL_HERE";
 
 // Google OAuth — restricted to @kazam.in
 const GOOGLE_CLIENT_ID = "450055929584-1kdid7qospqa3u2f7ceg3nv9sh1udeoa.apps.googleusercontent.com";
@@ -32,18 +32,10 @@ async function loadSocietyById(societyId) {
 }
 
 async function apiPost(data) {
-  const params = new URLSearchParams();
-  params.append("data", JSON.stringify(data));
-
   try {
-    await fetch(API_URL, {
-      method: "POST",
-      mode: "no-cors",
-      body: params,
-    });
-  } catch(e) {}
-
-  await new Promise(r => setTimeout(r, 4000));
+    await fetch(API_URL, { method: "POST", body: JSON.stringify(data) });
+  } catch (e) {}
+  await new Promise(r => setTimeout(r, 2500));
   return { success: true };
 }
 
@@ -549,19 +541,40 @@ function OnboardingApp({ user }) {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const [societies, setSocieties] = useState([]);
-  const [cpos, setCpos] = useState(() => {
-    try {
-      const saved = sessionStorage.getItem("kazam_cpos");
-      return saved ? JSON.parse(saved) : ["Vida", "Kazam"];
-    } catch { return ["Vida", "Kazam"]; }
-  });
+  const [cpos, setCpos] = useState(["Vida", "Kazam"]);
   const [loading, setLoading] = useState(true);
   const [editLoading, setEditLoading] = useState(false);
 
-  // Societies loaded from embedded list — always instant, no API needed
+  // Load societies: try fresh CSV first, fall back to embedded list
   useEffect(() => {
-    setSocieties(EMBEDDED_SOCIETIES);
+    setSocieties(EMBEDDED_SOCIETIES); // Show embedded list immediately
     setLoading(false);
+
+    // Then try to fetch fresh list from CSV (catches newly onboarded societies)
+    fetch(MASTER_CSV)
+      .then(res => res.text())
+      .then(text => {
+        return new Promise((resolve) => {
+          Papa.parse(text, {
+            header: true, skipEmptyLines: true,
+            transformHeader: (h) => h.trim().replace(/^\uFEFF/, ''),
+            complete: (r) => resolve(r.data),
+          });
+        });
+      })
+      .then(rows => {
+        const fresh = rows
+          .filter(r => r.society_id && r.society_name)
+          .map(r => ({
+            id: (r.society_id || "").trim(),
+            name: (r.society_name || "").trim(),
+            city: (r.city || "").trim(),
+          }));
+        if (fresh.length > 0) {
+          setSocieties(fresh);
+        }
+      })
+      .catch(() => {}); // Silently keep embedded list if fetch fails
   }, []);
 
   const set = (key, val) => {
@@ -570,12 +583,8 @@ function OnboardingApp({ user }) {
   };
 
   const handleAddCPO = async (name) => {
-    await apiPost({ action: "addCPO", cpo_name: name });
-    setCpos(prev => {
-      const updated = [...prev, name];
-      sessionStorage.setItem("kazam_cpos", JSON.stringify(updated));
-      return updated;
-    });
+    const res = await apiPost({ action: "addCPO", cpo_name: name });
+    setCpos(prev => [...prev, name]);
   };
 
   const handleNew = () => {
@@ -643,8 +652,29 @@ function OnboardingApp({ user }) {
 
   const reset = () => {
     setResult(null); setForm({ ...emptyForm }); setStep(0); setMode(null);
-    // Refresh society list
-    setSocieties(EMBEDDED_SOCIETIES);
+    // Refresh society list from CSV (picks up newly onboarded societies)
+    fetch(MASTER_CSV)
+      .then(res => res.text())
+      .then(text => {
+        return new Promise((resolve) => {
+          Papa.parse(text, {
+            header: true, skipEmptyLines: true,
+            transformHeader: (h) => h.trim().replace(/^\uFEFF/, ''),
+            complete: (r) => resolve(r.data),
+          });
+        });
+      })
+      .then(rows => {
+        const fresh = rows
+          .filter(r => r.society_id && r.society_name)
+          .map(r => ({
+            id: (r.society_id || "").trim(),
+            name: (r.society_name || "").trim(),
+            city: (r.city || "").trim(),
+          }));
+        if (fresh.length > 0) setSocieties(fresh);
+      })
+      .catch(() => {});
   };
 
   // ---- RESULT SCREEN ----
