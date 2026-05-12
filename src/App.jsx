@@ -639,7 +639,8 @@ function OnboardingApp({ user }) {
   const submit = async () => {
     setSubmitting(true);
     try {
-      const payload = { ...form, action: mode === "edit" ? "update" : "submit" };
+      const isEdit = mode === "edit" || (form.society_id && form.society_id.startsWith("KZ-RWA-"));
+      const payload = { ...form, action: isEdit ? "update" : "submit" };
       if (form.agreement_file) payload.agreement_file = form.agreement_file.data;
       else delete payload.agreement_file;
       if (form.electricity_bill_file) payload.electricity_bill_file = form.electricity_bill_file.data;
@@ -647,7 +648,35 @@ function OnboardingApp({ user }) {
       if (!payload.rwa_email) payload.rwa_email = (form.rwa_emails || "").split(",")[0].trim();
 
       await apiPost(payload);
-      setResult({ success: true, societyName: form.society_name, mode });
+
+      // Inject into cache immediately so the society is editable right away
+      // (without waiting for Google Sheets CSV cache to refresh)
+      if (isEdit || mode === "new") {
+        const formCopy = { ...form };
+        // Remove file objects (not serializable for cache)
+        delete formCopy.agreement_file;
+        delete formCopy.electricity_bill_file;
+
+        if (_cachedFullData) {
+          if (isEdit) {
+            // Replace existing entry in cache
+            const idx = _cachedFullData.findIndex(r => (r.society_id || "").trim() === form.society_id);
+            if (idx >= 0) _cachedFullData[idx] = { ..._cachedFullData[idx], ...formCopy };
+          } else {
+            // Add new entry to cache
+            _cachedFullData.push(formCopy);
+          }
+        }
+
+        // Also update the search list
+        setSocieties(prev => {
+          const exists = prev.some(s => s.id === form.society_id);
+          if (exists) return prev;
+          return [...prev, { id: form.society_id || "NEW", name: form.society_name, city: form.city }];
+        });
+      }
+
+      setResult({ success: true, societyName: form.society_name, mode: isEdit ? "edit" : "new" });
     } catch (err) {
       setResult({ success: false, error: err.message });
     }
