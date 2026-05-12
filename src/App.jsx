@@ -16,7 +16,10 @@ const MASTER_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS8DOTWVjesi
 const EMBEDDED_SOCIETIES = [{"id": "KZ-RWA-001", "name": "ADARSH RHYTHM", "city": "Bengaluru"}, {"id": "KZ-RWA-002", "name": "Aditi Eloquent Apt", "city": "Bengaluru"}, {"id": "KZ-RWA-003", "name": "Alpine Pyramiad", "city": "Bengaluru"}, {"id": "KZ-RWA-004", "name": "Arcadia Apartment", "city": "Bengaluru"}, {"id": "KZ-RWA-005", "name": "BDA Jnanabharathi Residential Enclave", "city": "Bengaluru"}, {"id": "KZ-RWA-006", "name": "BDA Sahyadri Apt", "city": "Bengaluru"}, {"id": "KZ-RWA-007", "name": "Bosch EC3 (360 Business Park)", "city": "Bengaluru"}, {"id": "KZ-RWA-008", "name": "Chandragiri BDA", "city": "Bengaluru"}, {"id": "KZ-RWA-009", "name": "Concorde Spring Meadows", "city": "Bengaluru"}, {"id": "KZ-RWA-010", "name": "Confident Aquila", "city": "Bengaluru"}, {"id": "KZ-RWA-011", "name": "Definer kingdom Apartment HMCL", "city": "Bengaluru"}, {"id": "KZ-RWA-012", "name": "Disha Courtyard", "city": "Bengaluru"}, {"id": "KZ-RWA-013", "name": "DS MAX SAANJH", "city": "Bengaluru"}, {"id": "KZ-RWA-014", "name": "DSR Sunshine", "city": "Bengaluru"}, {"id": "KZ-RWA-015", "name": "GK jewel city", "city": "Bengaluru"}, {"id": "KZ-RWA-016", "name": "Global Edifice Celesta", "city": "Bengaluru"}, {"id": "KZ-RWA-017", "name": "Godrej Royale Wood", "city": "Bengaluru"}, {"id": "KZ-RWA-018", "name": "Golden Abode Apt", "city": "Bengaluru"}, {"id": "KZ-RWA-019", "name": "Golden Palms Apartment", "city": "Bengaluru"}, {"id": "KZ-RWA-020", "name": "Gomati Iris Apartment", "city": "Bengaluru"}, {"id": "KZ-RWA-021", "name": "Gowri Apartment", "city": "Bengaluru"}, {"id": "KZ-RWA-022", "name": "Hilife Rio", "city": "Bengaluru"}, {"id": "KZ-RWA-023", "name": "Jains Aashraya Apt", "city": "Bengaluru"}, {"id": "KZ-RWA-024", "name": "JRK Gardens", "city": "Bengaluru"}, {"id": "KZ-RWA-025", "name": "JW marriot", "city": "Bengaluru"}, {"id": "KZ-RWA-026", "name": "KHB Platinum Apt", "city": "Bengaluru"}, {"id": "KZ-RWA-027", "name": "MAHAVEER CHALET", "city": "Bengaluru"}, {"id": "KZ-RWA-028", "name": "Mahaveer Lakes", "city": "Bengaluru"}, {"id": "KZ-RWA-029", "name": "Mahaveer Rhyolite", "city": "Bengaluru"}, {"id": "KZ-RWA-030", "name": "Mahaveer Varna", "city": "Bengaluru"}, {"id": "KZ-RWA-031", "name": "Meda Green", "city": "Bengaluru"}, {"id": "KZ-RWA-032", "name": "NITESH FOREST HILLS", "city": "Bengaluru"}, {"id": "KZ-RWA-033", "name": "Pariwar Pragathi", "city": "Bengaluru"}, {"id": "KZ-RWA-034", "name": "Pioneer Sun Blossom", "city": "Bengaluru"}, {"id": "KZ-RWA-035", "name": "Pionier Lakedew residency HMCL", "city": "Bengaluru"}, {"id": "KZ-RWA-036", "name": "Prestige Notting Hills", "city": "Bengaluru"}, {"id": "KZ-RWA-037", "name": "Purva Atria Platina", "city": "Bengaluru"}, {"id": "KZ-RWA-038", "name": "Purva Heights", "city": "Bengaluru"}, {"id": "KZ-RWA-039", "name": "Radiant Silver Bell", "city": "Bengaluru"}, {"id": "KZ-RWA-040", "name": "RS Sanchike", "city": "Bengaluru"}, {"id": "KZ-RWA-041", "name": "Sai Krupa Elite", "city": "Bengaluru"}, {"id": "KZ-RWA-042", "name": "Sai Nanadana Apartment", "city": "Bengaluru"}, {"id": "KZ-RWA-043", "name": "Saiven Siesta", "city": "Bengaluru"}, {"id": "KZ-RWA-044", "name": "Sattva East Apartment", "city": "Bengaluru"}, {"id": "KZ-RWA-045", "name": "Shrishti Enclave", "city": "Bengaluru"}, {"id": "KZ-RWA-046", "name": "SNR Verity", "city": "Bengaluru"}, {"id": "KZ-RWA-047", "name": "SRI TIRUMALA SYMPHONY", "city": "Bengaluru"}, {"id": "KZ-RWA-048", "name": "The Orchard Apartment", "city": "Bengaluru"}, {"id": "KZ-RWA-049", "name": "Trendsquares Ortus", "city": "Bengaluru"}, {"id": "KZ-RWA-050", "name": "Vistara Classic Apt", "city": "Bengaluru"}, {"id": "KZ-RWA-051", "name": "VMAKS Chalet", "city": "Bengaluru"}, {"id": "KZ-RWA-052", "name": "Wework Kazam", "city": "Bengaluru"}, {"id": "KZ-RWA-053", "name": "Wonderwall Bricks & Milestone", "city": "Bengaluru"}, {"id": "KZ-RWA-054", "name": "ACE GOLFSHIRE Apartment Noida", "city": "Noida"}, {"id": "KZ-RWA-055", "name": "Air force Naval", "city": "Delhi"}, {"id": "KZ-RWA-056", "name": "Batla Appartment", "city": "Delhi"}, {"id": "KZ-RWA-057", "name": "Batukji Appartment", "city": "Delhi"}, {"id": "KZ-RWA-058", "name": "Bhagat Singh", "city": "Delhi"}, {"id": "KZ-RWA-059", "name": "Bharat Mandpam", "city": "Delhi"}, {"id": "KZ-RWA-060", "name": "Eden towers Apartment Dwarka", "city": "Delhi"}, {"id": "KZ-RWA-061", "name": "Ganpati Apartments", "city": "Delhi"}, {"id": "KZ-RWA-062", "name": "Gulistan Apartment", "city": "Delhi"}, {"id": "KZ-RWA-063", "name": "Habitate Apartment", "city": "Delhi"}, {"id": "KZ-RWA-064", "name": "Himalya Apartment", "city": "Delhi"}, {"id": "KZ-RWA-065", "name": "Hmm Employees CGHS LTD", "city": "Delhi"}, {"id": "KZ-RWA-066", "name": "Kallol Apartment", "city": "Delhi"}, {"id": "KZ-RWA-067", "name": "Khukhrain Sabha", "city": "Delhi"}, {"id": "KZ-RWA-068", "name": "M k Residency Dwarka (HMCL)", "city": "Delhi"}, {"id": "KZ-RWA-069", "name": "Meera Bai CGHS", "city": "Delhi"}, {"id": "KZ-RWA-070", "name": "Nagin Lake Apartment", "city": "Delhi"}, {"id": "KZ-RWA-071", "name": "Navkunj Apartment", "city": "Delhi"}, {"id": "KZ-RWA-072", "name": "Neelachal Apartment", "city": "Delhi"}, {"id": "KZ-RWA-073", "name": "Neelgiri Apartment", "city": "Delhi"}, {"id": "KZ-RWA-074", "name": "Palm City Apartment", "city": "Delhi"}, {"id": "KZ-RWA-075", "name": "Rashmi Apartment", "city": "Delhi"}, {"id": "KZ-RWA-076", "name": "Sai Apartment", "city": "Delhi"}, {"id": "KZ-RWA-077", "name": "Satyam Apartment", "city": "Delhi"}, {"id": "KZ-RWA-078", "name": "Siddhartha Kunj", "city": "Delhi"}, {"id": "KZ-RWA-079", "name": "Sunder Enclave (HMCL)", "city": "Delhi"}, {"id": "KZ-RWA-080", "name": "The Arya Cghs Ltd Rohini", "city": "Delhi"}, {"id": "KZ-RWA-081", "name": "The Grand HeroMotoCorp", "city": "Delhi"}, {"id": "KZ-RWA-082", "name": "The Kangra Adarsh apartment", "city": "Delhi"}, {"id": "KZ-RWA-083", "name": "True Friends CGHS", "city": "Delhi"}, {"id": "KZ-RWA-084", "name": "Vidut Nikunj Apartment", "city": "Delhi"}, {"id": "KZ-RWA-085", "name": "Vishwakarma Apartment", "city": "Delhi"}, {"id": "KZ-RWA-086", "name": "Bestech Park View", "city": "Dharuhera"}, {"id": "KZ-RWA-087", "name": "Adel Redwood", "city": "Faridabad"}, {"id": "KZ-RWA-088", "name": "Blossom Green", "city": "Faridabad"}, {"id": "KZ-RWA-089", "name": "Park Floor 1 Faridabad", "city": "Faridabad"}, {"id": "KZ-RWA-090", "name": "Sai Vatika", "city": "Faridabad"}, {"id": "KZ-RWA-091", "name": "Aditya City Apartments", "city": "Ghaziabad"}, {"id": "KZ-RWA-092", "name": "Arc Angles Apt", "city": "Ghaziabad"}, {"id": "KZ-RWA-093", "name": "Cosmos Golden Heights", "city": "Ghaziabad"}, {"id": "KZ-RWA-094", "name": "Crossing Republic", "city": "Ghaziabad"}, {"id": "KZ-RWA-095", "name": "Gaur city", "city": "Ghaziabad"}, {"id": "KZ-RWA-096", "name": "High End Paradise HMCL", "city": "Ghaziabad"}, {"id": "KZ-RWA-097", "name": "MCC Signature homes", "city": "Ghaziabad"}, {"id": "KZ-RWA-098", "name": "Milan Vihar 2", "city": "Ghaziabad"}, {"id": "KZ-RWA-099", "name": "Shipra Ravera", "city": "Ghaziabad"}, {"id": "KZ-RWA-100", "name": "Emaar Palm Gardens", "city": "Gurgaon"}, {"id": "KZ-RWA-101", "name": "Hero Motocrop  Gurgaon Plant", "city": "Gurgaon"}, {"id": "KZ-RWA-102", "name": "Hero Motocrop Udyog Vihar", "city": "Gurgaon"}, {"id": "KZ-RWA-103", "name": "Mapsko Royale Ville", "city": "Gurgaon"}, {"id": "KZ-RWA-104", "name": "Hero Motocorp Haridwar Plant", "city": "Hardwar"}, {"id": "KZ-RWA-105", "name": "Alekya Towers", "city": "Hyderabad"}, {"id": "KZ-RWA-106", "name": "Aparna KANOPY Tulip", "city": "Hyderabad"}, {"id": "KZ-RWA-107", "name": "Beema Pride", "city": "Hyderabad"}, {"id": "KZ-RWA-108", "name": "ENVIRISE", "city": "Hyderabad"}, {"id": "KZ-RWA-109", "name": "GKRS BLISS 1", "city": "Hyderabad"}, {"id": "KZ-RWA-110", "name": "JANAPRIYA UTOPIA", "city": "Hyderabad"}, {"id": "KZ-RWA-111", "name": "Kendriya vihar phase 2", "city": "Hyderabad"}, {"id": "KZ-RWA-112", "name": "KSR 2GETHERMENTS", "city": "Hyderabad"}, {"id": "KZ-RWA-113", "name": "Mythris The Town", "city": "Hyderabad"}, {"id": "KZ-RWA-114", "name": "Paradise Homes", "city": "Hyderabad"}, {"id": "KZ-RWA-115", "name": "Shree Tirumala Millennium Phase 2", "city": "Hyderabad"}, {"id": "KZ-RWA-116", "name": "SRI NIVASA HEIGHTS", "city": "Hyderabad"}, {"id": "KZ-RWA-117", "name": "TNR Shakuntala", "city": "Hyderabad"}, {"id": "KZ-RWA-118", "name": "Vasusri Sunraise Apt", "city": "Hyderabad"}, {"id": "KZ-RWA-119", "name": "Venkatadri Heights", "city": "Hyderabad"}, {"id": "KZ-RWA-120", "name": "Hero Motocorp Kukas Plant", "city": "Jaipur"}, {"id": "KZ-RWA-121", "name": "Sai Sastha crystal", "city": "Mumbai"}, {"id": "KZ-RWA-122", "name": "Hero Motocorp Neemrana Plant", "city": "Neemrana"}, {"id": "KZ-RWA-123", "name": "ACE Platinum", "city": "Noida"}, {"id": "KZ-RWA-124", "name": "Amrapali princely estate HMCL", "city": "Noida"}, {"id": "KZ-RWA-125", "name": "Apex Aura", "city": "Noida"}, {"id": "KZ-RWA-126", "name": "Blossom County", "city": "Noida"}, {"id": "KZ-RWA-127", "name": "Celestial Palace (HMCL)", "city": "Noida"}, {"id": "KZ-RWA-128", "name": "French Apartment", "city": "Noida"}, {"id": "KZ-RWA-129", "name": "Harmukh Apartments", "city": "Noida"}, {"id": "KZ-RWA-130", "name": "Kings Park", "city": "Noida"}, {"id": "KZ-RWA-131", "name": "Shivalik Homes", "city": "Noida"}, {"id": "KZ-RWA-132", "name": "Stellar Sigma Apartments", "city": "Noida"}, {"id": "KZ-RWA-133", "name": "Sun Twilight Mall Greater Noida", "city": "Noida"}, {"id": "KZ-RWA-134", "name": "B-4, Arv New Town", "city": "Pune"}, {"id": "KZ-RWA-135", "name": "B-5, Arv New Town", "city": "Pune"}, {"id": "KZ-RWA-136", "name": "B-6, Arv New Town", "city": "Pune"}, {"id": "KZ-RWA-137", "name": "Ganga Ambernath society", "city": "Pune"}, {"id": "KZ-RWA-138", "name": "Hinjewadi Hills", "city": "Pune"}, {"id": "KZ-RWA-139", "name": "Kalpaturu serenity", "city": "Pune"}, {"id": "KZ-RWA-140", "name": "Mahuligad Society", "city": "Pune"}, {"id": "KZ-RWA-141", "name": "Mantra Majestic", "city": "Pune"}, {"id": "KZ-RWA-142", "name": "MARVEL IDEAL SPACIO", "city": "Pune"}, {"id": "KZ-RWA-143", "name": "Mont Very Grand 2", "city": "Pune"}, {"id": "KZ-RWA-144", "name": "Omega Paradise", "city": "Pune"}, {"id": "KZ-RWA-145", "name": "Optima Heights", "city": "Pune"}, {"id": "KZ-RWA-146", "name": "Park Infinia", "city": "Pune"}, {"id": "KZ-RWA-147", "name": "PRISTINE PACIFIC", "city": "Pune"}, {"id": "KZ-RWA-148", "name": "Royal Oak society", "city": "Pune"}, {"id": "KZ-RWA-149", "name": "Sanskriti Phase-1 & 2", "city": "Pune"}, {"id": "KZ-RWA-150", "name": "Shree Ram Kailash Society", "city": "Pune"}, {"id": "KZ-RWA-151", "name": "Spirea Society", "city": "Pune"}, {"id": "KZ-RWA-152", "name": "Sunville Society", "city": "Pune"}, {"id": "KZ-RWA-153", "name": "Tanish O2", "city": "Pune"}, {"id": "KZ-RWA-154", "name": "Tanish park Wing A", "city": "Pune"}, {"id": "KZ-RWA-155", "name": "Tanish park Wing B", "city": "Pune"}, {"id": "KZ-RWA-156", "name": "Tanish park Wing C", "city": "Pune"}, {"id": "KZ-RWA-157", "name": "Tanish park Wing D", "city": "Pune"}, {"id": "KZ-RWA-158", "name": "Tanish park Wing E", "city": "Pune"}, {"id": "KZ-RWA-159", "name": "Tanish park Wing F", "city": "Pune"}, {"id": "KZ-RWA-160", "name": "Tanish park Wing G", "city": "Pune"}, {"id": "KZ-RWA-161", "name": "Tanish park Wing H", "city": "Pune"}, {"id": "KZ-RWA-162", "name": "Tanish park Wing I", "city": "Pune"}, {"id": "KZ-RWA-163", "name": "Tanish park Wing J", "city": "Pune"}, {"id": "KZ-RWA-164", "name": "Tanish Pride Society", "city": "Pune"}, {"id": "KZ-RWA-165", "name": "Yash ravi park society", "city": "Pune"}, {"id": "KZ-RWA-166", "name": "Hero Motocorp Chittoor Plant (Sri City)", "city": "Sri City"}, {"id": "KZ-RWA-167", "name": "Hero Motocrop  Vadodara Plant", "city": "Vadodara"}, {"id": "KZ-RWA-168", "name": "Riddhi Granduer", "city": "Hyderabad"}, {"id": "KZ-RWA-169", "name": "Palm Grove Heights", "city": "Gurgaon"}, {"id": "KZ-RWA-170", "name": "Galaxy North Ave 2", "city": "Ghaziabad"}, {"id": "KZ-RWA-171", "name": "Sai Keerthi Prime", "city": "Hyderabad"}, {"id": "KZ-RWA-172", "name": "Amrapali Silicon City", "city": "Noida"}, {"id": "KZ-RWA-173", "name": "Mantra Moments", "city": "Pune"}, {"id": "KZ-RWA-174", "name": "Sai Nandana Marvella", "city": "Bangalore"}, {"id": "KZ-RWA-175", "name": "SMP Sai Samarth Society", "city": "Pune"}, {"id": "KZ-RWA-176", "name": "SS Brindavanam Apartment", "city": "Bangalore"}, {"id": "KZ-RWA-177", "name": "Vasudha Spring Apartment", "city": "Bangalore"}];
 
 // Load full society details from CSV (for edit mode only)
-async function loadSocietyById(societyId) {
+// Full society data cache — populated once, reused for search + edit
+let _cachedFullData = null;
+
+async function fetchFullSocietyData() {
   const res = await fetch(MASTER_CSV);
   const text = await res.text();
   return new Promise((resolve) => {
@@ -24,11 +27,26 @@ async function loadSocietyById(societyId) {
       header: true, skipEmptyLines: true,
       transformHeader: (h) => h.trim().replace(/^\uFEFF/, ''),
       complete: (r) => {
-        const match = r.data.find(row => (row.society_id || "").trim() === societyId);
-        resolve(match || null);
+        _cachedFullData = r.data;
+        resolve(r.data);
       }
     });
   });
+}
+
+function getSocietyList(rows) {
+  return rows
+    .filter(r => r.society_id && r.society_name)
+    .map(r => ({
+      id: (r.society_id || "").trim(),
+      name: (r.society_name || "").trim(),
+      city: (r.city || "").trim(),
+    }));
+}
+
+function findSocietyById(societyId) {
+  if (!_cachedFullData) return null;
+  return _cachedFullData.find(row => (row.society_id || "").trim() === societyId) || null;
 }
 
 async function apiPost(data) {
@@ -545,36 +563,17 @@ function OnboardingApp({ user }) {
   const [loading, setLoading] = useState(true);
   const [editLoading, setEditLoading] = useState(false);
 
-  // Load societies: try fresh CSV first, fall back to embedded list
+  // Load societies: embedded list first, then fresh CSV
   useEffect(() => {
-    setSocieties(EMBEDDED_SOCIETIES); // Show embedded list immediately
+    setSocieties(EMBEDDED_SOCIETIES);
     setLoading(false);
 
-    // Then try to fetch fresh list from CSV (catches newly onboarded societies)
-    fetch(MASTER_CSV)
-      .then(res => res.text())
-      .then(text => {
-        return new Promise((resolve) => {
-          Papa.parse(text, {
-            header: true, skipEmptyLines: true,
-            transformHeader: (h) => h.trim().replace(/^\uFEFF/, ''),
-            complete: (r) => resolve(r.data),
-          });
-        });
-      })
+    fetchFullSocietyData()
       .then(rows => {
-        const fresh = rows
-          .filter(r => r.society_id && r.society_name)
-          .map(r => ({
-            id: (r.society_id || "").trim(),
-            name: (r.society_name || "").trim(),
-            city: (r.city || "").trim(),
-          }));
-        if (fresh.length > 0) {
-          setSocieties(fresh);
-        }
+        const fresh = getSocietyList(rows);
+        if (fresh.length > 0) setSocieties(fresh);
       })
-      .catch(() => {}); // Silently keep embedded list if fetch fails
+      .catch(() => {});
   }, []);
 
   const set = (key, val) => {
@@ -596,7 +595,12 @@ function OnboardingApp({ user }) {
   const handleEdit = async (societyId) => {
     setEditLoading(true);
     try {
-      const s = await loadSocietyById(societyId);
+      // Try cached data first, re-fetch if not found
+      let s = findSocietyById(societyId);
+      if (!s) {
+        await fetchFullSocietyData();
+        s = findSocietyById(societyId);
+      }
       if (s) {
         const mapped = { ...emptyForm };
         Object.keys(mapped).forEach(k => {
@@ -615,7 +619,7 @@ function OnboardingApp({ user }) {
         setMode("edit");
         setStep(0);
       } else {
-        alert("Society not found. Try again.");
+        alert("Society not found in the sheet. It may take a few minutes for newly added societies to appear. Please try again shortly.");
       }
     } catch (e) {
       alert("Failed to load society data.");
@@ -652,26 +656,10 @@ function OnboardingApp({ user }) {
 
   const reset = () => {
     setResult(null); setForm({ ...emptyForm }); setStep(0); setMode(null);
-    // Refresh society list from CSV (picks up newly onboarded societies)
-    fetch(MASTER_CSV)
-      .then(res => res.text())
-      .then(text => {
-        return new Promise((resolve) => {
-          Papa.parse(text, {
-            header: true, skipEmptyLines: true,
-            transformHeader: (h) => h.trim().replace(/^\uFEFF/, ''),
-            complete: (r) => resolve(r.data),
-          });
-        });
-      })
+    // Refresh society list from CSV
+    fetchFullSocietyData()
       .then(rows => {
-        const fresh = rows
-          .filter(r => r.society_id && r.society_name)
-          .map(r => ({
-            id: (r.society_id || "").trim(),
-            name: (r.society_name || "").trim(),
-            city: (r.city || "").trim(),
-          }));
+        const fresh = getSocietyList(rows);
         if (fresh.length > 0) setSocieties(fresh);
       })
       .catch(() => {});
